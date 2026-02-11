@@ -4,13 +4,10 @@ const container = document.querySelector('.container');
 const progressBar = document.querySelector('#bar');
 const divArray = [];
 
-function changeColor(e) {
+function handleKeyPress(e) {
     // TODO: Allow backspace
     if (e.key == 'Shift' || e.key == 'Backspace') {
         return;
-    } else if (keyCounter == text.length) { // TODO: Check this condition without keydown event listener
-        document.removeEventListener('keydown', changeColor);
-        results();
     } else if (text[keyCounter] == e.key) {
         divArray[keyCounter].classList.add('correct-key');
     } else {
@@ -18,6 +15,11 @@ function changeColor(e) {
     }
 
     keyCounter++;
+
+    if (keyCounter == text.length) {
+        document.removeEventListener('keydown', handleKeyPress);
+        results();
+    }
 }
 
 function results() {
@@ -60,7 +62,7 @@ async function fetchRandomText() {
 
         console.log(words[0]);
         
-        text.push(...words[0].split(""), (i < 9) ? " " : "");
+        (i < 9) ? text.push(...words[0].split(""), " ") : text.push(...words[0].split(""));
 
         progressBarWidth += 10;
         progressBar.style.width = progressBarWidth + "%";
@@ -76,7 +78,7 @@ async function fetchRandomText() {
 
 async function playTypingGame() {
     await fetchRandomText();
-    document.addEventListener("keydown", changeColor);
+    document.addEventListener("keydown", handleKeyPress);
 }
 
 window.addEventListener('load', playTypingGame);
