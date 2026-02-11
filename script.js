@@ -1,6 +1,7 @@
 let keyCounter = 0;
 let text = [];
 const container = document.querySelector('.container');
+const progressBar = document.querySelector('#bar');
 const divArray = [];
 
 document.addEventListener("keydown", changeColor);
@@ -58,7 +59,7 @@ function displayResults(accuracy) {
 }
 
 async function fetchRandomText() {
-    // TODO: Display loading progress bar
+    let progressBarWidth = 0;
     for (let i = 0; i < 10; i++) {
         const data = await fetch('https://random-word-api.herokuapp.com/word?number=1&diff=1');
         const result = await data.json();
@@ -66,6 +67,9 @@ async function fetchRandomText() {
         console.log(result[0]);
         
         text.push(...result[0].split(""), (i < 9) ? " " : "");
+
+        progressBarWidth += 10;
+        progressBar.style.width = progressBarWidth + "%";
     }
 
     for (let i = 0; i < text.length; i++) {
