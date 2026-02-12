@@ -24,7 +24,7 @@ function handleKeyPress(e) {
 
     if (keyCounter == text.length) {
         document.removeEventListener('keydown', handleKeyPress);
-        displayScore();
+        setTimeout(displayScore, 1000);
     }
 }
 
