@@ -7,6 +7,10 @@ const divArray = [];
 const wordCount = 10;
 
 function handleKeyPress(e) {
+    if (keyCounter == 0) {
+        startTime = Date.now();
+    }
+
     // TODO: Allow backspace
     if (e.key == 'Shift' || e.key == 'Backspace') {
         return;
@@ -72,7 +76,6 @@ async function fetchRandomText() {
 async function playTypingGame() {
     await fetchRandomText();
     document.addEventListener("keydown", handleKeyPress);
-    startTime = Date.now();
 }
 
 window.addEventListener('load', playTypingGame);
