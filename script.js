@@ -1,8 +1,10 @@
 let keyCounter = 0;
 let text = [];
+let startTime;
 const container = document.querySelector('.container');
 const progressBar = document.querySelector('#bar');
 const divArray = [];
+const wordCount = 10;
 
 function handleKeyPress(e) {
     // TODO: Allow backspace
@@ -18,17 +20,11 @@ function handleKeyPress(e) {
 
     if (keyCounter == text.length) {
         document.removeEventListener('keydown', handleKeyPress);
-        results();
+        displayScore();
     }
 }
 
-function results() {
-    calculateAccuracy();
-    //calculateWPM();
-    //displayResults();
-}
-
-function calculateAccuracy() {
+function displayScore() {
     let correctLetterCount = 0;
 
     for (let i = 0; i < divArray.length; i++) {
@@ -37,26 +33,23 @@ function calculateAccuracy() {
         }
     }
 
-    const accuracy = correctLetterCount * 100 / divArray.length;
+    const accuracy = Math.round(correctLetterCount * 100 / divArray.length);
 
     console.log("Accuracy: " + accuracy + "%");
-}
 
-function calculateWPM() {
-    const seconds = 60;
-    const WPM = words / seconds;
-}
+    const endTime = Date.now();
+    const minutes = (endTime - startTime) / 60000
+    const wordsPerMinute = Math.round(wordCount / minutes);
+    console.log(wordsPerMinute + " wpm");
 
-function displayResults(accuracy) {
-    document.getElementById('complete').innerHTML = "Typing Test Complete!";
-    document.getElementById('test-name').innerHTML = "You typed the <b>Accuracy Calculator Typing Test</b>";
-    document.getElementById('accuracy').innerHTML = "Your accuracy was ";
-    document.getElementById('accuracy-percentage').innerHTML = accuracy + "%";
+    divArray.forEach((div) => {
+        div.remove();
+    });
 }
 
 async function fetchRandomText() {
     let progressBarWidth = 0;
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < wordCount; i++) {
         const response = await fetch('https://random-word-api.herokuapp.com/word?number=1&diff=1');
         const words = await response.json();
 
@@ -79,6 +72,7 @@ async function fetchRandomText() {
 async function playTypingGame() {
     await fetchRandomText();
     document.addEventListener("keydown", handleKeyPress);
+    startTime = Date.now();
 }
 
 window.addEventListener('load', playTypingGame);
